@@ -105,7 +105,7 @@ example:
 import stopspam
 import json
 
-result = stopspam.check_ip('hello@test.com','json')
+result = stopspam.check_email('hello@test.com','json')
 data = json.loads(result)
 ```
 
@@ -123,7 +123,7 @@ example:
 import stopspam
 import json
 
-result = stopspam.check_ip('badaccount','json')
+result = stopspam.check_username('badaccount','json')
 data = json.loads(result)
 ```
 
