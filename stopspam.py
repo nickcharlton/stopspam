@@ -1,6 +1,7 @@
 import sys
 import requests
 import json
+import socket
 '''
 
 stopspam.py
@@ -69,7 +70,7 @@ def request(url):
         if r.status_code == 200:
             return r.text
     except:
-        print 'Server returned ' + r.status_code + ' response'
+        return False
 
 
 def check_ip(ip, format):
@@ -119,6 +120,29 @@ def check_format(format):
         return '&f=json'
     if 'xml' in format:
         return ''
+
+
+# Takes anything, returns True or False if likely to be spam.
+def is_spam(item):
+    format = check_format('json')
+    try:
+        socket.inet_aton(item)
+        d = check_ip(item, format)
+        i = 'ip'
+        print 'ip'
+    except socket.error:  # Not an IP address
+        if '@' in item:  # Probably an email
+            d = check_email(item, format)
+            i = 'email'
+        else:
+            d = check_username(item, format)
+            i = 'username'
+
+    data = json.loads(d)
+    if data[i]['appears'] == 1:
+        return True
+    else:
+        return False
 
 
 def check_param(param):
