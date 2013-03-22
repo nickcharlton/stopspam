@@ -1,6 +1,6 @@
 import stopspam
 import unittest
-import simplejson as json
+import json
 import xml.etree.ElementTree as xml
 from test import test_support
 
@@ -72,6 +72,24 @@ class TestStopSpam(unittest.TestCase):
 
     def test_email_confidence_good(self):
         self.assertEqual(stopspam.check_email_confidence(self.good_email), 0)
+
+    def test_is_spam_ip(self):
+        self.assertTrue(stopspam.is_spam(self.bad_ip))
+
+    def test_not_spam_ip(self):
+        self.assertFalse(stopspam.is_spam(self.good_ip))
+
+    def test_is_spam_email(self):
+        self.assertTrue(stopspam.is_spam(self.bad_email))
+
+    def test_not_spam_email(self):
+        self.assertFalse(stopspam.is_spam(self.good_email))
+
+    def test_is_spam_username(self):
+        self.assertTrue(stopspam.is_spam(self.bad_username))
+
+    def test_not_spam_username(self):
+        self.assertFalse(stopspam.is_spam(self.good_username))
 
 
 def test_main():
