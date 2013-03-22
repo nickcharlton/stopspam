@@ -1,5 +1,5 @@
 import sys
-import requests
+import urllib2 as requests
 import json
 import socket
 '''
@@ -65,10 +65,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 
 def request(url):
-    r = requests.get(url)
+    r = requests.urlopen(url)
     try:
-        if r.status_code == 200:
-            return r.text
+        if r.getcode() == 200:
+            return r.read()
     except:
         return False
 
