@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -10,7 +10,7 @@ install_requires = [
 
 
 setup(name='stopspam',
-      version='0.2.2',
+      version='0.3',
       description="Detect spam. Stop Spam. Simple",
       long_description=README + '\n\n' + NEWS,
       classifiers=[
@@ -25,11 +25,13 @@ setup(name='stopspam',
         "Topic :: Internet :: WWW/HTTP :: Site Management",
         "Topic :: Utilities",
     ],
-    keywords='spam',
+keywords='spam',
     author='Paul Hallett',
     author_email='hello@phalt.co',
     url='http://github.com/phalt/stopspam',
     license='GPL3',
+    packages=find_packages('src'),
+    package_dir={'': 'src'}, include_package_data=True,
     zip_safe=False,
     install_requires=install_requires,
     entry_points={

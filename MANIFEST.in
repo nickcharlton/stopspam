@@ -1,3 +1,2 @@
-stopspam.py
-readme.txt
-*stopspam.egg-info
+include news.txt
+include readme.txt

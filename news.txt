@@ -1,12 +1,15 @@
-Update logs.
+Update logs
+------------
+
+Version 0.3
+
+* Finally, things should work smoothly.
 
 Version 0.2.2
---------------
 
 * Should now work with pip
 * Added news
 
 Version 0.2.1
---------------
 
 * initial release
