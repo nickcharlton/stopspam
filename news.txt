@@ -1,6 +1,10 @@
 Update logs
 ------------
 
+Version 0.3.1
+
+* Bump version to fix readme errors
+
 Version 0.3
 
 * Finally, things should work smoothly.

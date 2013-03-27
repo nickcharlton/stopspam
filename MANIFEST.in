@@ -1,2 +1,2 @@
-include news.txt
-include readme.txt
+include NEWS.txt
+include README.txt

@@ -1,4 +1,3 @@
-Stopspam.
 
 Check if an ip address, username or email is likely to be spam.
 

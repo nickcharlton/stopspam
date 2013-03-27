@@ -1,7 +1,7 @@
 # stopspam
 =
 
-Version 0.2
+Version 0.3.1
 
 A Python app to check ip addresses, usernames and email address for their potential as spam, using the stopforumspam ([http://stopforumspam.com](http://stopforumspam.com)) database.
 

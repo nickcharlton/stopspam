@@ -2,15 +2,15 @@ from setuptools import setup, find_packages
 import os
 
 here = os.path.abspath(os.path.dirname(__file__))
-README = open(os.path.join(here, 'readme.txt')).read()
-NEWS = open(os.path.join(here, 'news.txt')).read()
+README = open(os.path.join(here, 'README.txt')).read()
+NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
 install_requires = [
 ]
 
 
 setup(name='stopspam',
-      version='0.3',
+      version='0.3.1',
       description="Detect spam. Stop Spam. Simple",
       long_description=README + '\n\n' + NEWS,
       classifiers=[
@@ -19,7 +19,7 @@ setup(name='stopspam',
         "Development Status :: 3 - Alpha",
         "Environment :: Other Environment",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+        "License :: OSI Approved :: GNU General Public License (GPL)",
         "Operating System :: OS Independent",
         "Natural Language :: English",
         "Topic :: Internet :: WWW/HTTP :: Site Management",
