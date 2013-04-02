@@ -16,4 +16,4 @@ __author__ = 'Paul Hallet'
 __license__ = 'GPL v3'
 __copyright__ = 'Copyright 2013 Paul Hallet'
 
-import stopspam
+from stopspam import *
