@@ -1,7 +1,8 @@
-import sys
-import urllib2 as requests
+import urllib2 as requests  # Imagine what people will say when they see this
 import json
 import socket
+
+VERSION = '0.4'
 '''
 
 stopspam.py
@@ -64,7 +65,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>
 '''
 
 
-def request(url):
+def version():
+    return VERSION
+
+
+def _request(url):
     r = requests.urlopen(url)
     try:
         if r.getcode() == 200:
@@ -73,148 +78,51 @@ def request(url):
         return False
 
 
-def check_ip(ip, format):
-    url = 'http://stopforumspam.com/api?ip='
-    format = check_format(format)
-    return request(url + ip + format)
-
-
-def check_ip_confidence(ip):
-    data = json.loads(check_ip(ip, 'json'))
-    if data['ip']['appears'] == 1:
-        return data['ip']['confidence']
-    else:
-        return 0
-
-
-def check_username(username, format):
-    url = 'http://stopforumspam.com/api?username='
-    format = check_format(format)
-    return request(url + username + format)
-
-
-def check_username_confidence(username):
-    data = json.loads(check_username(username, 'json'))
-    if data['username']['appears'] == 1:
-        return data['username']['confidence']
-    else:
-        return 0
-
-
-def check_email(email, format):
-    url = 'http://stopforumspam.com/api?email='
-    format = check_format(format)
-    return request(url + email + format)
-
-
-def check_email_confidence(email):
-    data = json.loads(check_email(email, 'json'))
-    if data['email']['appears'] == 1:
-        return data['email']['confidence']
-    else:
-        return 0
-
-
-def check_format(format):
+def _get_format(format):
     if 'json' in format:
         return '&f=json'
-    if 'xml' in format:
+    elif 'xml' in format:
         return ''
+    else:  # JSON by default
+        return '&f=json'
 
 
-# Takes anything, returns True or False if likely to be spam.
-def is_spam(item):
-    format = check_format('json')
-    try:
+def _get_type(item):
+    try:  # Create a socket to the ip, if we can then it must be an ip!
         socket.inet_aton(item)
-        d = check_ip(item, format)
         i = 'ip'
-        print 'ip'
-    except socket.error:  # Not an IP address
-        if '@' in item:  # Probably an email
-            d = check_email(item, format)
+    except socket.error:
+        if '@' in item:
             i = 'email'
         else:
-            d = check_username(item, format)
             i = 'username'
+    return i
 
-    data = json.loads(d)
-    if data[i]['appears'] == 1:
+
+def _get_url(item):
+    return 'http://stopforumspam.com/api?' + _get_type(item) + '='
+
+
+def raw(item, format):
+    return _request(_get_url(item) + item + _get_format(format))
+
+
+def check(item):
+    returned = _request(_get_url(item) + item + _get_format('json'))
+    data = json.loads(returned)
+    if data[_get_type(item)]['appears'] == 1:
         return True
     else:
         return False
 
 
-def check_param(param):
-    if '-ip=' in param:
-        return {'ip': param.replace('-ip=', '')}
-    if '-email=' in param:
-        return {'email': param.replace('-email=', '')}
-    if '-username=' in param:
-        return {'username': param.replace('-username=', '')}
+def confidence(item):
+    data = json.loads(raw(item, 'json'))
+    if data[_get_type(item)]['appears'] == 1:
+        return data[_get_type(item)]['confidence']
     else:
-        return False
-
-
-def terminal_check_ip(ip):
-    data = json.loads(check_ip(ip, 'json'))
-    if data['ip']['appears'] == 1:
-        results = ip + ' IS SPAM '
-        results += 'with a confidence of ' + str(data['ip']['confidence']) + '%'
-    else:
-        results = ip + ' is probably not spam'
-
-    return results
-
-
-def terminal_check_email(email):
-    data = json.loads(check_email(email, 'json'))
-    if data['email']['appears'] == 1:
-        results = email + ' IS SPAM '
-        results += 'with a confidence of ' + str(data['email']['confidence']) + '%'
-    else:
-        results = email + ' is probably not spam'
-
-    return results
-
-
-def terminal_check_username(username):
-    data = json.loads(check_username(username, 'json'))
-    if data['username']['appears'] == 1:
-        results = username + ' IS SPAM '
-        results += 'with a confidence of ' + str(data['username']['confidence']) + '%'
-    else:
-        results = username + ' is probably not spam'
-
-    return results
-
-
-def print_help():
-    print '\nTerminal usage'
-    print '----------------\n'
-    print 'python stopspam.py -ip=IP or -email=EMAIL or -username=USERNAME'
-    print '\nFor example:'
-    print 'python stomspam.py -ip=212.59.28.8'
-    print '\nThis will return:'
-    print '212.59.28.8 IS SPAM with a confidence of 99.85%'
-
+        return 0
 
 if __name__ == "__main__":
-
-    try:
-        i_param = sys.argv[1]
-        param = check_param(i_param)
-
-        if i_param == '--help':
-            print_help()
-        if '-ip=' in i_param:
-            print terminal_check_ip(param['ip'])
-        elif '-email=' in i_param:
-            print terminal_check_email(param['email'])
-        elif '-username=' in i_param:
-            print terminal_check_username(param['username'])
-        else:
-            print 'Incorrect parameters supplied, type --help for help'
-
-    except:
-        print '\nNo parameters supplied, type stopspam.py --help for help'
+    print 'Stopspam version ' + VERSION
+    print 'Usage:\n    import stopspam\n    print stopspam.check(\'127.0.0.1\')\n    >>>True'
