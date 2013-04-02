@@ -24,11 +24,11 @@ stopspam.check('testuser')
 
 Simple!
 
-## Docs
+## Documentation
 =
 
 ### check(item)
-Check to see if an item is in the spam database
+Check to see if an item is in the stopforumspam database
 
 Requirements:
 
@@ -42,7 +42,6 @@ Returns:
 example:
 ```python
 import stopspam
-
 stopspam.check('127.0.0.1')
 >>> True
 ```
@@ -61,7 +60,6 @@ Returns:
 example:
 ```python
 import stopspam
-
 stopspam.confidence('hello@test.com')
 >>> 99.0
 ```
@@ -80,7 +78,6 @@ Returns:
 example:
 ```python
 import stopspam
-
 stopspam.raw('127.0.0.1', 'json')
 >>>{"success":1,"ip":{"frequency":0,"appears":0}}
 '''
@@ -103,6 +100,7 @@ import stopspam
 items = ['127.0.0.1', '192.168.0.1']
 stopspam.batch(items)
 >>>{'127.0.0.1': 'True', '192.168.0.1': 'False'}
+```
 
 ## Tests
 =
@@ -110,7 +108,7 @@ stopspam.batch(items)
 The application works and all tests pass.
 In order to check the tests in this version, download this repo and run:
 ```bash
-python tests.py
+python src/stopspam/tests.py
 ```
 
 # Legal stuff
