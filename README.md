@@ -1,195 +1,116 @@
 # stopspam
-=
 
-Version 0.3.1
+Version 0.4
 
-A Python app to check ip addresses, usernames and email address for their potential as spam, using the stopforumspam ([http://stopforumspam.com](http://stopforumspam.com)) database.
+A Python libary to check ip addresses, usernames and email address for their potential as spam against the stopforumspam ([http://stopforumspam.com](http://stopforumspam.com)) database.
 
-This application was built because I couldn't find anything simple that worked as a library as well as a terminal application.
-
-This is great for use in a Django, flask or web.py application!
 
 ## Installation
 =
 
-* Download from github:
+* Install via pip:
 
 ```bash
-git clone https://github.com/phalt/stopspam.git
+pip install stopspam
 ```
 
-* Make sure you have the requirements:
-
-```bash
-pip install -r requirements.txt
-```
-This will install [requests](http://docs.python-requests.org), a required app.
-
-* Add it to your app:
+* Use it in your app:
 
 ```python
 import stopspam
+stopspam.check('testuser')
+>>> True
 ```
 
 Simple!
+
+## Docs
+=
+
+### check(item)
+Check to see if an item is in the spam database
+
+Requirements:
+
+* item - string. Examples: '192.168.0.1', 'hello@phalt.co', 'phalt'
+
+Returns:
+
+* Boolean, True if item is present in spam database.
+
+
+example:
+```python
+import stopspam
+
+stopspam.check('127.0.0.1')
+>>> True
+```
+
+###confidence(item)
+Returns the likelyhood of an item being spam
+
+Requirements:
+
+* item - string. Examples: '192.168.0.1', 'hello@phalt.co', 'phalt'
+
+Returns:
+* float - representing likelyhood (out of 100) that item is spam.
+
+
+example:
+```python
+import stopspam
+
+stopspam.confidence('hello@test.com')
+>>> 99.0
+```
+
+###raw(item, format)
+Returns a raw request from the stopforumspam database
+
+Requirements:
+
+* item - string. Examples:  '192.168.0.1', 'hello@phalt.co', 'phalt'
+* format - string. Must be 'json' or 'xml'
+
+Returns:
+* string - JSON or XML formatted.
+
+example:
+```python
+import stopspam
+
+stopspam.raw('127.0.0.1', 'json')
+>>>{"success":1,"ip":{"frequency":0,"appears":0}}
+'''
+
+###batch(list)
+Check a list of items against the stopforumspam database.
+
+Requirements:
+
+* list - a list of strings
+
+Returns:
+
+* a dictionary of {'string' : boolean} for each item fed
+
+example:
+```python
+import stopspam
+
+items = ['127.0.0.1', '192.168.0.1']
+stopspam.batch(items)
+>>>{'127.0.0.1': 'True', '192.168.0.1': 'False'}
 
 ## Tests
 =
 
 The application works and all tests pass.
-In order to check the tests run:
+In order to check the tests in this version, download this repo and run:
 ```bash
 python tests.py
-```
-
-# Termnial usage
-=
-
-stopspam can be used in the terminal.
-
-Examples:
-
-```bash
-python stopspam.py -ip=127.0.0.1
-
-python stopspam.py -email=hello@test.com
-
-python stopspam.py -username=phalt
-```
-
-These will all produce a single line print out:
-
-```bash
-127.0.0.1 is probably not spam
-```
-
-or
-
-```bash
-ztest@test.com IS SPAM with a confidence of 99.87%
-```
-
-## API usage
-=
-
-stopspam can also be used in your Python projects.
-Here is a list of api calls and examples that you can use.
-
-#### check_ip(ip, format)
-Check an ip address is spam
-
-Requirements:
-
-* ip - string
-* format - string ('json' or 'xml')
-
-
-example:
-```python
-import stopspam
-import json
-
-result = stopspam.check_ip('127.0.0.1','json')
-data = json.loads(result)
-```
-
-#### check_email(email, format)
-Check an email address is spam
-
-Requirements:
-
-* email - string
-* format - string ('json' or 'xml')
-
-
-example:
-```python
-import stopspam
-import json
-
-result = stopspam.check_email('hello@test.com','json')
-data = json.loads(result)
-```
-
-#### check_username(username, format)
-Check a username is spam
-
-Requirements:
-
-* username - string
-* format - string ('json' or 'xml')
-
-
-example:
-```python
-import stopspam
-import json
-
-result = stopspam.check_username('badaccount','json')
-data = json.loads(result)
-```
-
-#### check_ip_confidence(ip)
-Returns the confidence level that an ip is spam
-
-Requirements:
-
-* ip - string
-
-Returns:
-* float
-
-
-example:
-```python
-import stopspam
-
-result = stopspam.check_ip_confidence('127.0.0.1')
-
-print result
->>> 95.68
-```
-
-#### check_email_confidence(email)
-Returns the confidence level that an email is spam
-
-Requirements:
-
-* email - string
-
-Returns:
-* float
-
-
-example:
-```python
-import stopspam
-
-result = stopspam.check_email_confidence('test@helloc.om')
-
-print result
->>> 99.0
-```
-
-#### check_username_confidence(email)
-Returns the confidence level that an username is spam
-
-Requirements:
-
-* username - string
-
-Returns:
-* float
-
-
-example:
-```python
-import stopspam
-
-result = stopspam.check_username_confidence('testuser')
-
-print result
->>> 97.0
 ```
 
 # Legal stuff

@@ -12,84 +12,67 @@ class TestStopSpam(unittest.TestCase):
         self.bad_ip = '212.59.28.8'
         self.bad_username = 'crvenkapica'
         self.bad_email = 'crvenkapica@serphawk.com'
-        self.json = 'json'
-        self.xml = 'xml'
         #  Hopefully the most good ip address, username and email
         self.good_ip = '127.0.0.1'
         self.good_username = 'paulhallett'
         self.good_email = 'hello@phalt.co'
 
-    def test_check_ip_json(self):
-        '''
-        Assert that we can check for ip and get json data back
-        '''
-        results = stopspam.check_ip(self.bad_ip, self.json)
-        results = json.loads(results)
-        self.assertEquals(results['success'], 1)
+        def test_good_check_ip(self):
+            self.assertFalse(stopspam.check(self.good_ip))
 
-    def test_check_ip_xml(self):
-        results = stopspam.check_ip(self.bad_ip, self.xml)
-        results = xml.fromstring(results)
-        test = results.attrib
-        self.assertEquals(test['success'], 'true')
+        def test_good_check_email(self):
+            self.assertFalse(stopspam.check(self.good_email))
 
-    def test_check_username_json(self):
-        results = stopspam.check_username(self.bad_username, self.json)
-        results = json.loads(results)
-        self.assertEquals(results['success'], 1)
+        def test_good_check_user(self):
+            self.assertFalse(stopspam.check(self.good_username))
 
-    def test_check_username_xml(self):
-        results = stopspam.check_username(self.bad_username, self.xml)
-        results = xml.fromstring(results)
-        test = results.attrib
-        self.assertEquals(test['success'], 'true')
+        def test_bad_check_ip(self):
+            self.assertTrue(stopspam.check(self.bad_ip))
 
-    def test_check_email_json(self):
-        results = stopspam.check_email(self.bad_email, self.json)
-        results = json.loads(results)
-        self.assertEquals(results['success'], 1)
+        def test_bad_check_email(self):
+            self.assertTrue(stopspam.check(self.bad_email))
 
-    def test_check_email_xml(self):
-        results = stopspam.check_email(self.bad_email, self.xml)
-        results = xml.fromstring(results)
-        test = results.attrib
-        self.assertEquals(test['success'], 'true')
+        def test_bad_check_user(self):
+            self.assertTrue(stopspam.check(self.bad_username))
 
-    def test_ip_confidence_bad(self):
-        self.assertNotEqual(stopspam.check_ip_confidence(self.bad_ip), 0)
+        def test_good_confidence_ip(self):
+            self.assertEquals(stopspam.confidence(self.good_ip), 0)
 
-    def test_ip_confidence_good(self):
-        self.assertEqual(stopspam.check_ip_confidence(self.good_ip), 0)
+        def test_good_confidence_email(self):
+            self.assertEquals(stopspam.confidence(self.good_email), 0)
 
-    def test_username_confidence_bad(self):
-        self.assertNotEqual(stopspam.check_username_confidence(self.bad_username), 0)
+        def test_good_confidence_user(self):
+            self.assertEquals(stopspam.confidence(self.good_username), 0)
 
-    def test_username_confidence_good(self):
-        self.assertEqual(stopspam.check_username_confidence(self.good_username), 0)
+        def test_bad_confidence_ip(self):
+            self.assertNotEqual(stopspam.confidence(self.bad_ip), 0)
 
-    def test_email_confidence_bad(self):
-        self.assertNotEqual(stopspam.check_email_confidence(self.bad_email), 0)
+        def test_bad_confidence_email(self):
+            self.assertNotEqual(stopspam.confidence(self.bad_email), 0)
 
-    def test_email_confidence_good(self):
-        self.assertEqual(stopspam.check_email_confidence(self.good_email), 0)
+        def test_bad_confidence_user(self):
+            self.assertNotEqual(stopspam.confidence(self.bad_username), 0)
 
-    def test_is_spam_ip(self):
-        self.assertTrue(stopspam.is_spam(self.bad_ip))
+        def test_raw_json(self):
+            data = stopspam.raw(self.bad_ip, 'json')
+            try:
+                data_j = json.loads(data)
+            except:
+                data_j = 'not json'
+            self.assertEquals(data_j['success'], 1)
 
-    def test_not_spam_ip(self):
-        self.assertFalse(stopspam.is_spam(self.good_ip))
+        def test_raw_xml(self):
+            data = stopspam.raw(self.bad_ip, 'xml')
+            try:
+                data_x = xml.fromstring(data)
+            except:
+                data_x = 'not xml'
+            self.assertEquals(data_x['success'], 'true')
 
-    def test_is_spam_email(self):
-        self.assertTrue(stopspam.is_spam(self.bad_email))
-
-    def test_not_spam_email(self):
-        self.assertFalse(stopspam.is_spam(self.good_email))
-
-    def test_is_spam_username(self):
-        self.assertTrue(stopspam.is_spam(self.bad_username))
-
-    def test_not_spam_username(self):
-        self.assertFalse(stopspam.is_spam(self.good_username))
+        def test_batch(self):
+            items = [self.bad_ip, self.bad_email, self.bad_username]
+            results = stopspam.batch(items)
+            self.assertTrue(results[self.bad_ip])
 
 
 def test_main():
