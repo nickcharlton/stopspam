@@ -40,6 +40,7 @@ Returns:
 
 
 example:
+
 ```python
 import stopspam
 stopspam.check('127.0.0.1')
@@ -80,7 +81,7 @@ example:
 import stopspam
 stopspam.raw('127.0.0.1', 'json')
 >>>{"success":1,"ip":{"frequency":0,"appears":0}}
-'''
+```
 
 ###batch(list)
 Check a list of items against the stopforumspam database.
@@ -100,7 +101,7 @@ import stopspam
 items = ['127.0.0.1', '192.168.0.1']
 stopspam.batch(items)
 >>>{'127.0.0.1': 'True', '192.168.0.1': 'False'}
-'''
+```
 
 ## Tests
 =
@@ -109,7 +110,7 @@ The application works and all tests pass.
 In order to check the tests in this version, download this repo and run:
 ```bash
 python src/stopspam/tests.py
-'''
+```
 
 # Legal stuff
 ==
